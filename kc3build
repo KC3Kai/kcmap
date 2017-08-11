@@ -1,0 +1,27 @@
+#!/bin/bash
+
+SRC=`pwd`
+STG="$SRC/stage"
+CMD=""
+
+mkdir -p "$STG"
+babel "$SRC/kcmap.es" > "$STG/kcmap.js"
+cd "$STG"
+
+[[ -n "$@" ]] && fl="$@" || fl=$(ls "$SRC/source")
+for w in $fl; do
+    if [[ -d "$SRC/source/$w" ]]; then
+        echo ">>> $w"
+        cp -r "$SRC/source/$w/." .
+        node kcmap.js
+        node kcmap.js genpoi
+        [[ -f spots_unamed.json ]] && mv spots_unamed.json "$SRC/source/$w/"
+        [[ -f draw.svg ]] && mv draw.svg "$SRC/built/$w.svg"
+        [[ -f poi.json ]] && mv poi.json "$SRC/poi/$w.json"
+        rm *.xml *.json
+    fi
+done
+
+cd "$SRC"
+node poi.js
+node kc3kai.js

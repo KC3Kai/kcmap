@@ -1,5 +1,6 @@
 
 const fs = require('fs-extra')
+const stringify = require("json-stringify-pretty-compact")
 
 ;(() => {
   const poi = fs.readJSONSync('./poi/final.json')
@@ -18,6 +19,7 @@ const fs = require('fs-extra')
     kc3[world] = map
   }
   fs.writeJSONSync('kc3kai.json', kc3, {spaces: '\t'})
+  fs.writeFileSync('kc3kai_compact.json', stringify(kc3))
 })()
 
 // Regexp
